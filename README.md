@@ -1,5 +1,5 @@
-### I'm a piece of shit
-
+### Never coding before my college
+just try to improve myself
 <!--
 **HMBlankcat/HMBLANKCAT** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
 
