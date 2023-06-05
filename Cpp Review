@@ -1431,22 +1431,140 @@ C++流预定义了 4 个流，它们是 cin,cout,cerr 和 clog。它们可以直
 和 clog 是 ostream 的对象，cout 处理标准输出，cerr 和 clog 都处理标准出错信息，只是 cerr
 输出不带缓冲，clog 输出带缓冲。答案为：istream、ostream、cerr、clog。
 
+-------------------------------------------------------------------------------------
 
 
 
+第 13 章 异常处理
+13.1 异常处理的基本思想
+异常就是程序在运行的过程中，由于使用环境的变化以及用户的操作而产生的错误。常
+见的异常有 new 无法取得所需的内存、请求打开硬盘上不存在的文件、程序中出现了以零
+为除数的错误、数组下标越界、运算溢出、无效函数参数、打印机未打开导致程序运行中挂
+接设备失败等。一个应用程序，既要保证其正确性，还应有容错能力。
+异常处理机制保证了当应用环境出现意外或用户操作不当时，程序能够作出合理的反
+应。其基本思想是让一个函数在发现了（try）自己无法处理的错误时抛出（throw）一个异
+常，希望它的（直接或间接）调用者能够处理这个异常。能够处理这类异常的函数可以表明
+它将捕获（catch）这类异常。
+异常处理的过程是：在底层发生的问题，逐级上报，直到有能力可以处理异常的那一级
+为止。如果程序最终没有相应的代码处理该异常，那么该异常最后被 C++系统所接受，C++
+系统就简单地终止程序运行。
+
+13.2异常处理的实现方法:
+c++中异常处理的具体步骤:
+①定义异常 (try语句块)
+格式为:
+try
+{
+    可能产生错误的语句
+}
+② 定义异常处理（catch 语句块）
+格式为：
+ catch（异常类型声明 1）
+ {
+ 异常处理语句块 1
+ }
+ catch（异常类型声明 2）
+ {
+ 异常处理语句块 2
+ }
+ ……
+ catch（异常类型声明 n）
+ {
+ 异常处理语句块 n
+}
+③ 抛弃异常（throw 语句）
+ 格式为：
+throw 表达式；
+说明:
+①try块之后必须紧跟一个或多个catch,对异常进行相应的处理
+② catch 后的括号中只能有一个形参，且该形参的类型是必要的。因为抛出异常后，该异常会按照其数据类型与 catch 后括号中的形参类型严格匹配从而被捕获。如果找不到数据类型匹配的 catch 块，则系统调用其默认的异常处理程序。
+③ catch(…)语句可以捕获全部异常，因此，若使用这个语句，应将它放置在所有的 catch
+语句之后。
+④ 当 catch 捕获了某个异常后，catch()语句的异常类型参数被初始化，然后开始栈的展开过程，包括从对应的 try 语句块开始到异常被抛出之间对构造的所有自动对象进行析构。析构的顺序与构造的顺序相反。然后程序从最后一个 catch 处理之后开始恢复。
+⑤ throw 语句用于抛出异常，由于 C++使用数据类型来区分不同的异常，因此在判断异常时，throw 语句中的表达式的值没有实际意义而表达式的类型非常重要。
+⑥ 抛出异常和异常处理可以放在不同的函数中。
 
 
+---------------------------------------------------------
 
 
+Q1例题 1．运行下列程序的结果为________________。
+#include <iostream.h>
+void testfun(int test)
+{
+try
+{
+if(test)
+throw test;
+else
+throw "it is a zero";
+}
+catch(int i)
+{
+cout<<"Except occurred: "<<i<<endl;
+}
+
+catch(const char *s)
+{
+cout<<"Except occurred: "<<s<<endl;
+}
+}
+int main()
+{
+testfun(10);
+testfun(100);
+testfun(0);
+return 0;
+}
+A1解答：
+本题主要考查对异常处理过程的理解。主函数第一次调用 testfun 函数时传递参数 10，10 不
+等于 0，所以执行抛出异常语句 throw 10；10 为 int 型，所以被 catch(int i)捕获，所以输出
+Except occurred:10。同理第二次调用 testfun 函数时输出 Except occurred:100。第三次调用
+testfun 函数时参数为 0，所以执行抛出异常语句 throw "it is a zero";该异常被 catch(const char 
+*s)捕获，输出 Except occurred: it is a zero。因此，本题答案为：
+Except occurred:10
+Except occurred:100
+Except occurred: it is a zero
 
 
+Q2例题 3．编写程序，打开用户指定的文件，读出其中的各行内容并显示在屏幕上。要求进行
+如下异常处理：当文件不存在而打不开时，认为是一种错误，此时通过抛掷与捕获异常来处
+理该错误。要求程序抛掷、捕获“char *”类型的异常并进行处理，输出相关的提示警告信
+息后不再进行相关文件的后继处理，通过 exit 退出程序而结束。若打开文件成功，则将文件
+中各行内容读出并显示在屏幕上。
+A2解答：
+参考程序如下：
+#include<fstream.h>
+#include<process.h>
+void main()
+{
+char fname[30],line[129];
+cout<<"input file name:";
+cin>>fname;
+ifstream inf(fname,ios::nocreate);
+try{
+if(inf.fail())
+throw fname;
+}
+catch(char *str)
+{
+cout<<"can not open file "<<str<<endl;
+exit(1);
+}
+while(!inf.eof())
+{
+inf.getline(line,128);
+cout<<line<<endl;
+}
+inf.close();
+}
+--------------------------------------------------------------------------------
 
+14STL
 
-
-
-
-
-
+从容器说起，容器包含 2 大类，一类是顺序容器（Sequence containers），包括 vector、
+list、deque 等，stack、queue 属于容器适配器的范畴；另一类是关联容器（Associative
+Containers），包括：set、map 和 multi_set, multi_map 等
 
 
 
