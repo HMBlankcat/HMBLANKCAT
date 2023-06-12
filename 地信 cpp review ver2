@@ -693,8 +693,73 @@ resd==0为止。
 
 
 
+,编程计算半径为r的圆的内接正n边形的面积，主函数做输入输出，面积计算函数为CalcArea。可以使用系统（cmath
+中）提供的正弦函数，函数原型为：double sin(double X);
+#include <iostream>
+#include <cmath>
+
+using namespace std;
+
+double CalcArea(double r, int n) {
+    double pi = acos(-1.0);  // 获取π的值，使用cmath中提供的反余弦函数
+    double angle = 2 * pi / n;  // 计算正n边形的每个内角的角度
+    double s = 2 * r * sin(angle / 2);  // 计算正n边形的边长
+    double area = (n * s * r) / 2;  // 计算正n边形的面积
+    return area;
+}
+
+int main() {
+    double r;
+    int n;
+    cout << "请输入半径r和正整数n：" << endl;
+    cin >> r >> n;
+    double area = CalcArea(r, n);
+    cout << "半径为" << r << "的圆的内接正" << n << "边形的面积为：" << area << endl;
+    return 0;
+}
 
 
+
+设计一个分数类Fraction该类的数据成员包括分子 fz 和分母 fm;类中还包括如下成员函数: (1)构造函数，用于初始化分子和分母，并进行约分。
+(2)成员函数 print，将分数以 "fz/fm" 的形式输出。
+再编写主函数对该类进行测试。
+
+
+#include <iostream>
+using namespace std;
+
+// 计算最大公约数
+int gcd(int a, int b) {
+    if (b == 0) {
+        return a;
+    }
+    return gcd(b, a % b);
+}
+
+class Fraction {
+private:
+    int fz; // 分子
+    int fm; // 分母
+
+public:
+    // 构造函数
+    Fraction(int fz, int fm) {
+        int g = gcd(fz, fm); // 求分子分母的最大公约数
+        this->fz = fz / g; // 约分后的分子
+        this->fm = fm / g; // 约分后的分母
+    }
+
+    // 输出分数
+    void print() {
+        cout << fz << "/" << fm << endl;
+    }
+};
+
+int main() {
+    Fraction f(6, 8);
+    f.print(); // 输出 3/4
+    return 0;
+}
 
 
 
